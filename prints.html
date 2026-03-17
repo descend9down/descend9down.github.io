@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DESCEND9DOWN — Prints</title>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap');
 :root {
@@ -26,43 +27,6 @@ body::before {
   opacity: 0.35;
 }
 
-/* HEADER */
-header {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  padding: 20px 48px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(139, 0, 0, 0.2);
-  background: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent);
-}
-.site-title {
-  font-family: 'Cinzel', serif;
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 8px;
-  color: rgba(224, 80, 80, 0.9);
-  text-decoration: none;
-}
-.header-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(139,0,0,0.4), transparent);
-  margin: 0 32px;
-}
-nav { display: flex; gap: 32px; align-items: center; }
-nav a {
-  font-size: 9px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: rgba(139,0,0,0.5);
-  text-decoration: none;
-  transition: color 0.3s;
-}
-nav a:hover, nav a.active { color: rgba(224,80,80,0.9); }
-
 /* HERO */
 .hero {
   min-height: 52vh;
@@ -70,7 +34,7 @@ nav a:hover, nav a.active { color: rgba(224,80,80,0.9); }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 140px 48px 60px;
+  padding: 100px 48px 60px;
   position: relative;
 }
 .hero::after {
@@ -368,19 +332,58 @@ footer {
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: #000; }
 ::-webkit-scrollbar-thumb { background: rgba(139,0,0,0.4); }
+
+/* ── PILL NAV ─────────────────────────────────────────── */
+.pill-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 0 10px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 10;
+}
+.pill-nav a {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 6px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.55);
+  background: rgba(255,255,255,0.04);
+  transition: color 0.25s, border-color 0.25s, background 0.25s, box-shadow 0.25s;
+  white-space: nowrap;
+}
+.pill-nav a:hover {
+  color: #fff;
+  border-color: var(--nav-accent);
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--nav-accent) 40%, transparent);
+}
+.pill-nav a.active {
+  color: #fff;
+  border-color: var(--nav-accent);
+  background: color-mix(in srgb, var(--nav-accent) 18%, transparent);
+  box-shadow:
+    0 0 8px color-mix(in srgb, var(--nav-accent) 60%, transparent),
+    0 0 20px color-mix(in srgb, var(--nav-accent) 30%, transparent);
+  font-weight: 600;
+}
+/* ── END PILL NAV ─────────────────────────────────────── */
 </style>
 </head>
 <body>
 
-<header>
-  <a href="index.html" class="site-title">DESCEND9DOWN</a>
-  <div class="header-line"></div>
-  <nav>
-    <a href="index.html">Gallery</a>
-    <a href="prints.html" class="active">Prints</a>
-    <a href="archive.html">Archive</a>
-  </nav>
-</header>
+<nav class="pill-nav" style="--nav-accent: #dc2626;">
+  <a href="index.html">Gallery</a>
+  <a href="prints.html" class="active">Prints</a>
+  <a href="archive.html">Archive</a>
+  <a href="descend9sound.html">D9S</a>
+</nav>
 
 <div class="hero">
   <p class="hero-eyebrow">Unofficial Gig Poster Series</p>
@@ -408,7 +411,6 @@ footer {
       <div class="print-arrow">→</div>
     </div>
   </div>
-
 
   <div class="print-item print-item-reverse" onclick="openLightbox('posters/apc_3_libras.png', 'A Perfect Circle · 3 Libras')">
     <div class="print-info">
