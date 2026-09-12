@@ -198,7 +198,12 @@ class KaleidoscopeFX {
         vec2 center = u_resolution * 0.5;
         vec2 p = fragPx - center;
         float r = length(p);
-        float fullR = min(u_resolution.x, u_resolution.y) * 0.62;
+        // Half the canvas's shorter side — the true, aspect-safe max
+        // radius of a circle that fits inside the frame in every
+        // direction, cardinal included. The vignette below is anchored
+        // to THIS, not to how far the pattern's own bright content
+        // happens to reach.
+        float fullR = min(u_resolution.x, u_resolution.y) * 0.5;
 
         // Gentle in/out zoom breathing on the front counter-rotating
         // pair — small and slow enough to read as a pulse, not a
@@ -234,10 +239,19 @@ class KaleidoscopeFX {
         float glow = exp(-r / (42.0 * (u_resolution.x / 480.0)));
         col += u_glowColor * glow * 1.15;
 
-        // Vignette pushed further out and widened so the outer frame
-        // stays lit longer before fading — the previous falloff started
-        // too close in, reading as dark toward the edges.
-        float vign = smoothstep(fullR * 1.02, fullR * 1.34, r);
+        // Circular porthole cutoff. This previously started past fullR
+        // (>1.0x) and finished even further out — since fullR itself
+        // could already exceed the canvas's own half-width/height, the
+        // fade frequently never engaged before hitting the frame edge,
+        // so the pattern's own cross/star-shaped brightness (not a
+        // circle) was what defined the visible silhouette. Anchoring
+        // both ends inside fullR (the true max safe radius) fixed the
+        // gross shape, but a wide transition band still let the
+        // pattern's own bright spots pierce through it unevenly —
+        // visible as thin spikes breaking the circular edge in a few
+        // directions. Narrowed here so the cutoff is crisp enough that
+        // content brightness can't leak past it directionally.
+        float vign = smoothstep(fullR * 0.80, fullR * 0.90, r);
         col = mix(col, vec3(0.0), vign);
 
         // Overall exposure lift — same look, just brighter.
