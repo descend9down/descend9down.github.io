@@ -15,7 +15,7 @@
   }
   #stage {
     position: relative;
-    width: 100vw; height: 100vh;
+    width: 100vw; height: calc(100vh - 130px);
     display: flex; align-items: center; justify-content: center;
   }
   #base-img {
@@ -117,6 +117,7 @@ const IMG_SRC = 'data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST
 const ZOOM = 1.5;
 
 const img = document.getElementById('base-img');
+const stage = document.getElementById('stage');
 const kCanvas = document.getElementById('kaleidoscope-canvas');
 const sCanvas = document.getElementById('shard-canvas');
 const sCtx = sCanvas.getContext('2d');
@@ -150,7 +151,7 @@ beholderImg.src = IMG_SRC;
 
 function buildOffscreen() {
   offscreen = document.createElement('canvas');
-  const W = window.innerWidth, H = window.innerHeight;
+  const W = stage.clientWidth, H = stage.clientHeight;
   offscreen.width = W;
   offscreen.height = H;
   const ctx = offscreen.getContext('2d');
@@ -166,8 +167,8 @@ function buildOffscreen() {
 }
 
 function resizeAll() {
-  sCanvas.width = window.innerWidth;
-  sCanvas.height = window.innerHeight;
+  sCanvas.width = stage.clientWidth;
+  sCanvas.height = stage.clientHeight;
   lensCanvas.width = 180; lensCanvas.height = 180;
   buildOffscreen();
   if (kaleido) kaleido.resize();
@@ -175,7 +176,7 @@ function resizeAll() {
 window.addEventListener('resize', resizeAll);
 
 // ─── SHATTER ─────────────────────────────────────────────
-document.getElementById('stage').addEventListener('click', (e) => {
+stage.addEventListener('click', (e) => {
   if (!imgLoaded || lensMode) return;
   createVoronoiShards(e.clientX, e.clientY);
   img.style.opacity = '0';
@@ -439,7 +440,7 @@ document.addEventListener('mousemove', (e) => {
 
 // ─── SHATTER ALL / RESET ─────────────────────────────────
 function shatterAll() {
-  createVoronoiShards(window.innerWidth/2, window.innerHeight/2);
+  createVoronoiShards(stage.clientWidth/2, stage.clientHeight/2);
   img.style.opacity = '0';
   kCanvas.style.opacity = '0';
   if (kaleido) kaleido.stop();
