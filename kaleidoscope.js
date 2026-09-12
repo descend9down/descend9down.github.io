@@ -110,9 +110,21 @@ class KaleidoscopeFX {
       uniform vec3 u_glowColor;
       #define PI 3.14159265359
 
-      vec3 sampleTex(vec2 px){
+      // fallback is what to return when the sample falls outside the
+      // source image's mapped rectangle. This MUST be the blend's own
+      // neutral color, not black: whichever layer runs off its image
+      // edge first (the zoomed-out background layer, with the least
+      // wedges, hits this soonest — well within the visible circle) was
+      // returning black, which a multiply blend turns into "zero out
+      // the entire composite here" and an overlay blend also collapses
+      // to black for. That imposed that one layer's own image-edge
+      // shape — a rectangle sampled through a low wedge count reads as
+      // a rotated square — onto the whole frame, which is what was
+      // actually producing the "diamond/rotated square" frame: not the
+      // vignette (which is a real, verified circle), but this.
+      vec3 sampleTex(vec2 px, vec3 fallback){
         vec2 uv = (px - u_imgOrigin) / u_imgSize;
-        if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) return vec3(0.0);
+        if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) return fallback;
         return texture2D(u_tex, uv).rgb;
       }
 
@@ -148,7 +160,7 @@ class KaleidoscopeFX {
       // not a fringe at its seams. Fringing instead comes only from
       // ringColor()'s boundary blend below, which mixes two genuinely
       // different, already-correct ring images near their shared edge.
-      vec3 foldSample(vec2 p, vec2 center, float slices, float time, float scale, vec2 pan){
+      vec3 foldSample(vec2 p, vec2 center, float slices, float time, float scale, vec2 pan, vec3 fallback){
         vec2 ps = p / scale;
         float theta = atan(ps.y, ps.x);
         float slice = 2.0 * PI / slices;
@@ -156,7 +168,7 @@ class KaleidoscopeFX {
         float wedgeAngle = k * slice + time;
         float ca = cos(-wedgeAngle), sa = sin(-wedgeAngle);
         vec2 rotated = vec2(ca * ps.x - sa * ps.y, sa * ps.x + ca * ps.y);
-        return sampleTex(center + rotated + pan);
+        return sampleTex(center + rotated + pan, fallback);
       }
 
       // Photoshop-style overlay: darkens where the base is dark,
@@ -218,13 +230,24 @@ class KaleidoscopeFX {
         vec2 pan2 = ringPan(0.20, 0.041, 0.033, u_seed * 1.7 + 2.0);
         vec2 pan3 = ringPan(0.08, 0.026, 0.019, u_seed * 2.6 + 5.0);
 
+        // Out-of-bounds fallback colors, chosen so that AFTER
+        // liftShadows (pow(c, 0.56)) they land exactly on each blend's
+        // true identity value: 0.290^0.56 = 0.5 (overlayBlend(0.5,b)=b,
+        // its neutral), and 1.0^0.56 = 1.0 (multiplyBlend(1,b)=b, its
+        // neutral). So a layer running off the image edge now
+        // contributes nothing to the composite there, instead of
+        // forcing black through the blend and imposing its own
+        // image-edge shape on the whole frame.
+        vec3 overlayNeutral = vec3(0.290);
+        vec3 multiplyNeutral = vec3(1.0);
+
         // Layer 1 and layer 2: same slice count and similar zoom,
         // opposite rotation direction — the counter-rotating pair.
         // Layer 3: fewer, larger slices, zoomed out further, rotating
         // slower — a background sitting behind the pair.
-        vec3 layer1 = liftShadows(foldSample(p, center, u_slices0,  u_time * 1.0 + u_seed * 2.0, breathe1, pan1));
-        vec3 layer2 = liftShadows(foldSample(p, center, u_slices0, -u_time * 1.0 + u_seed * 5.0, breathe2, pan2));
-        vec3 layer3 = liftShadows(foldSample(p, center, u_slices1,  u_time * 0.4 + u_seed * 7.0, 0.5,      pan3));
+        vec3 layer1 = liftShadows(foldSample(p, center, u_slices0,  u_time * 1.0 + u_seed * 2.0, breathe1, pan1, overlayNeutral));
+        vec3 layer2 = liftShadows(foldSample(p, center, u_slices0, -u_time * 1.0 + u_seed * 5.0, breathe2, pan2, overlayNeutral));
+        vec3 layer3 = liftShadows(foldSample(p, center, u_slices1,  u_time * 0.4 + u_seed * 7.0, 0.5,      pan3, multiplyNeutral));
 
         // Real per-pixel blending across the FULL frame — every pixel
         // samples all three layers, so there's no radius cutoff, no
@@ -235,9 +258,15 @@ class KaleidoscopeFX {
 
         // Bright glow concentrated at dead center, additive so the
         // pattern brightens and radiates from it rather than being
-        // replaced by a flat tint.
-        float glow = exp(-r / (42.0 * (u_resolution.x / 480.0)));
-        col += u_glowColor * glow * 1.15;
+        // replaced by a flat tint. Turned down significantly (from
+        // 1.15 intensity and a 42px falloff radius) — at full strength
+        // this alone was enough to read as a wash of the glow color
+        // (mostly magenta/purple across the pieces that use it) over
+        // the whole frame rather than a subtle accent at dead center;
+        // each piece's own artwork colors should read clearly with
+        // only a small, tight highlight at the very core.
+        float glow = exp(-r / (26.0 * (u_resolution.x / 480.0)));
+        col += u_glowColor * glow * 0.55;
 
         // Circular porthole cutoff. This previously started past fullR
         // (>1.0x) and finished even further out — since fullR itself
