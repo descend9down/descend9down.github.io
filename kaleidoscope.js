@@ -70,6 +70,8 @@ class KaleidoscopeFX {
     this.panSeedX = 0;
     this.panSeedY = 0;
     this.panSpeed = 1;
+    this.sliceJitterFront = 0;
+    this.sliceJitterBack = 0;
     this.active = false;
     this.time = 0;
     this.lastFrame = 0;
@@ -226,9 +228,16 @@ class KaleidoscopeFX {
         float breathe1 = 1.0  * (1.0 + 0.10 * sin(u_time * 0.07 + u_seed * 0.4));
         float breathe2 = 0.95 * (1.0 + 0.08 * sin(u_time * 0.05 + u_seed * 0.6 + 2.0));
 
-        vec2 pan1 = ringPan(0.20, 0.050, 0.037, u_seed * 0.9);
-        vec2 pan2 = ringPan(0.20, 0.041, 0.033, u_seed * 1.7 + 2.0);
-        vec2 pan3 = ringPan(0.08, 0.026, 0.019, u_seed * 2.6 + 5.0);
+        // Wider than before: a narrow drift range meant each layer
+        // tended to stay parked on whichever crop of the artwork it
+        // started near, so if that happened to be a blue-leaning region
+        // (as it was for layer1 in the case that exposed the overlay
+        // bug above), it stayed blue-leaning for the whole activation.
+        // More range means each layer actually traverses more of the
+        // piece's real color variety over the course of one activation.
+        vec2 pan1 = ringPan(0.30, 0.050, 0.037, u_seed * 0.9);
+        vec2 pan2 = ringPan(0.30, 0.041, 0.033, u_seed * 1.7 + 2.0);
+        vec2 pan3 = ringPan(0.14, 0.026, 0.019, u_seed * 2.6 + 5.0);
 
         // Out-of-bounds fallback colors, chosen so that AFTER
         // liftShadows (pow(c, 0.56)) they land exactly on each blend's
@@ -253,8 +262,38 @@ class KaleidoscopeFX {
         // samples all three layers, so there's no radius cutoff, no
         // seam and no gap anywhere, unlike the zone/ring approach this
         // replaced.
-        vec3 col = overlayBlend(layer1, layer2);
-        col = multiplyBlend(col, layer3);
+        //
+        // overlayBlend(a,b) is NOT symmetric: it picks its lo/hi branch
+        // per-channel based on a alone, so whichever layer is passed
+        // first gets outsized control over which colors can survive —
+        // confirmed by a controlled test where layer1 (sampling a
+        // blue-heavy crop) and layer2 (sampling a magenta-heavy crop of
+        // the SAME image) combined via overlayBlend(layer1, layer2)
+        // crushed magenta from layer2's own 44% down to 19%, i.e. this
+        // was measurably pulling every piece toward whichever hue
+        // layer1's pan happens to land on, not a fair merge of both.
+        // Averaging both orderings removes that arbitrary bias.
+        vec3 col = 0.5 * (overlayBlend(layer1, layer2) + overlayBlend(layer2, layer1));
+
+        // layer3 is sampled zoomed out 2x through few wedges, which
+        // means each screen pixel covers a much wider, heavily
+        // mip-blurred swath of the source image than layer1/2 do — it's
+        // effectively a low-resolution, spatially-averaged copy. Since
+        // multiply can only ever REMOVE color a layer doesn't have, and
+        // averaging together many differently-hued pixels usually
+        // converges toward whichever hue is most prevalent overall
+        // (here, blue/violet) rather than preserving the full spread,
+        // multiplying that blurred average in at full saturation was
+        // acting as a whole-frame tint toward that one dominant hue —
+        // crushing out the piece's own minority colors (e.g. Beholder's
+        // magenta) everywhere, not just where layer3 has real texture.
+        // Mostly desaturating it before the multiply keeps its
+        // contribution to what it's actually there for — shape and
+        // depth from a third, slower-moving layer — without also
+        // forcing its own averaged hue onto layer1/2's true colors.
+        float layer3Lum = dot(layer3, vec3(0.299, 0.587, 0.114));
+        vec3 layer3ForBlend = mix(layer3, vec3(layer3Lum), 0.85);
+        col = multiplyBlend(col, layer3ForBlend);
 
         // Bright glow concentrated at dead center, additive so the
         // pattern brightens and radiates from it rather than being
@@ -289,7 +328,7 @@ class KaleidoscopeFX {
         // Bold, high-contrast glass rather than a soft filtered photo —
         // a static per-pixel push, not a blend of anything.
         vec3 gray = vec3(dot(col, vec3(0.299, 0.587, 0.114)));
-        col = mix(gray, col, 1.18);
+        col = mix(gray, col, 1.35);
         col = clamp((col - 0.5) * 1.2 + 0.5, 0.0, 1.0);
 
         gl_FragColor = vec4(col, 1.0);
@@ -405,6 +444,18 @@ class KaleidoscopeFX {
     this.panSeedX = Math.random() * 1000;
     this.panSeedY = Math.random() * 1000;
     this.panSpeed = 0.6 + Math.random() * 0.8;
+    // Jitter the actual rendered slice counts around the user-chosen
+    // base, independently for the counter-rotating pair and the
+    // background layer. Without this, both were deterministic functions
+    // of `slices` alone (front = slices, back = round(slices*0.5)) —
+    // only their rotation varied by seed, so every activation was built
+    // from the exact same wedge-count skeleton and always converged on
+    // the same macro shape family, just spun to a different angle. Now
+    // a given base slice count can render as a visibly different
+    // pattern (fewer/more, sharper/softer wedges) from one activation
+    // to the next, not just a rotated copy of the same one.
+    this.sliceJitterFront = Math.round((Math.random() - 0.5) * 4); // -2..+2
+    this.sliceJitterBack = Math.round((Math.random() - 0.5) * 4);  // -2..+2, independent
     this.active = true;
     this.lastFrame = performance.now();
     this.raf = requestAnimationFrame((t) => this._loop(t));
@@ -439,9 +490,10 @@ class KaleidoscopeFX {
     gl.uniform2f(this._u.imgSize, this.imgSize[0], this.imgSize[1]);
     gl.uniform2f(this._u.imgOrigin, this.imgOrigin[0], this.imgOrigin[1]);
     // Layer 1 & 2 (the counter-rotating pair) share this slice count;
-    // layer 3 (background) gets fewer, larger slices.
-    gl.uniform1f(this._u.slices[0], this.slices);
-    gl.uniform1f(this._u.slices[1], Math.max(3, Math.round(this.slices * 0.5)));
+    // layer 3 (background) gets fewer, larger slices. Both are jittered
+    // per-activation (see start()) around the user-chosen base.
+    gl.uniform1f(this._u.slices[0], Math.max(4, this.slices + this.sliceJitterFront));
+    gl.uniform1f(this._u.slices[1], Math.max(3, Math.round(this.slices * 0.5) + this.sliceJitterBack));
     gl.uniform1f(this._u.time, this.time);
     gl.uniform1f(this._u.seed, this.seed);
     gl.uniform1f(this._u.panSeedX, this.panSeedX);
