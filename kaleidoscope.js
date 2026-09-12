@@ -295,17 +295,22 @@ class KaleidoscopeFX {
         vec3 layer3ForBlend = mix(layer3, vec3(layer3Lum), 0.85);
         col = multiplyBlend(col, layer3ForBlend);
 
-        // Bright glow concentrated at dead center, additive so the
-        // pattern brightens and radiates from it rather than being
-        // replaced by a flat tint. Turned down significantly (from
-        // 1.15 intensity and a 42px falloff radius) — at full strength
-        // this alone was enough to read as a wash of the glow color
-        // (mostly magenta/purple across the pieces that use it) over
-        // the whole frame rather than a subtle accent at dead center;
-        // each piece's own artwork colors should read clearly with
-        // only a small, tight highlight at the very core.
+        // Bright glow concentrated at dead center. This was additive
+        // (col += glowColor * glow), so the pattern brightens and
+        // radiates from it rather than being replaced by a flat tint —
+        // but all the wedges converge at dead center, so the pattern is
+        // already at its brightest right where the glow adds the most,
+        // and per-piece glowColor was getting pushed straight through
+        // white (measured: RGB(255,226,255) at Contagion's exact
+        // center, glowColor lavender (160,100,220) barely visible in
+        // the surviving green channel). Every piece's glow was clipping
+        // to the same white/gold regardless of its own color.
+        //
+        // mix() can't clip like that — it interpolates toward
+        // glowColor, never past it, so the piece's own glow hue reads
+        // clearly at the core instead of blowing out to white.
         float glow = exp(-r / (26.0 * (u_resolution.x / 480.0)));
-        col += u_glowColor * glow * 0.55;
+        col = mix(col, u_glowColor, glow * 0.6);
 
         // Circular porthole cutoff. This previously started past fullR
         // (>1.0x) and finished even further out — since fullR itself
