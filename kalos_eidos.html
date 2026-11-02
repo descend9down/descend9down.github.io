@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DESCEND9DOWN</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;1,400&family=VT323&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: #0e0b12; }
+  .d9d-nav a { color: #cbb98a; text-decoration: none; letter-spacing: 0.14em; }
+  .d9d-nav a:hover { color: #ecdcb0; }
+  .year-btn {
+    background: none; border: none; cursor: pointer; font-family: 'Cinzel', serif;
+    font-size: 20px; letter-spacing: 0.22em; color: #ecdcb0; padding: 8px 0;
+    text-shadow: 0 0 18px rgba(255,214,170,0.85), 0 0 34px rgba(214,150,255,0.55);
+  }
+  .year-btn:hover { color: #fff3da; text-shadow: 0 0 22px rgba(255,214,170,1), 0 0 44px rgba(214,150,255,0.8); }
+  .cantos-trigger { position: absolute; z-index: 8; cursor: pointer; }
+  .cantos-overlay { position: absolute; inset: 0; width: 100%; height: auto; z-index: 6; opacity: 0; transition: opacity 0.7s ease; pointer-events: none; }
+  .cantos-label {
+    position: absolute; z-index: 7; font-family: 'Cinzel', serif; font-weight: 700; font-size: 18px; letter-spacing: 0.22em;
+    color: #fff8ea; white-space: nowrap; text-align: center;
+    text-shadow: 0 0 6px #000, 0 0 12px rgba(0,0,0,0.9), 0 2px 4px rgba(0,0,0,0.95), 0 0 20px rgba(255,214,170,0.9), 0 0 36px rgba(214,150,255,0.65);
+    opacity: 0; transition: opacity 0.7s ease; pointer-events: none; transform: translate(-50%, -50%);
+    padding: 6px 16px; background: rgba(10,6,14,0.38); border-radius: 3px; backdrop-filter: blur(1px);
+  }
+  .cantos-trigger-left:hover ~ .cantos-overlay-left,
+  .cantos-trigger-left:hover ~ .cantos-label-left { opacity: 1; }
+  .cantos-trigger-right:hover ~ .cantos-overlay-right,
+  .cantos-trigger-right:hover ~ .cantos-label-right { opacity: 1; }
+
+  /* idle hint: a faint, slow glow behind each CANTO window so visitors know where to click.
+     it hands off to the full hover reveal and fades out while the window is hovered. */
+  .cantos-hint-glow {
+    position: absolute; z-index: 5; width: 30%; aspect-ratio: 1.3 / 1; transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse at center, rgba(255,205,130,0.55) 0%, rgba(214,150,255,0.22) 45%, rgba(0,0,0,0) 72%);
+    mix-blend-mode: screen; pointer-events: none; opacity: 0.18; transition: opacity 0.6s ease;
+    animation: cantos-hint 5.2s ease-in-out infinite;
+  }
+  .cantos-hint-img {
+    position: absolute; inset: 0; width: 100%; height: auto; z-index: 5;
+    mix-blend-mode: screen; pointer-events: none; opacity: 0.1; transition: opacity 0.6s ease;
+    animation: cantos-hint-img 5.2s ease-in-out infinite;
+  }
+  .cantos-hint-right, .cantos-hint-img-right { animation-delay: -2.6s; }
+  @keyframes cantos-hint {
+    0%, 100% { opacity: 0.12; }
+    50% { opacity: 0.4; }
+  }
+  @keyframes cantos-hint-img {
+    0%, 100% { opacity: 0.06; }
+    50% { opacity: 0.26; }
+  }
+  .cantos-trigger-left:hover ~ .cantos-hint-left,
+  .cantos-trigger-left:hover ~ .cantos-hint-img-left,
+  .cantos-trigger-right:hover ~ .cantos-hint-right,
+  .cantos-trigger-right:hover ~ .cantos-hint-img-right { animation: none; opacity: 0; }
+
+  .summoner-glow { position: absolute; inset: 0; width: 100%; height: auto; z-index: 3; mix-blend-mode: screen; pointer-events: none; }
+  .summoner-glow-ember { animation: summoner-ember 7.8s ease-in-out infinite; }
+  .summoner-glow-core { animation: summoner-core 5.6s ease-in-out infinite; }
+  .summoner-glow-wings { animation: summoner-wings 5.6s ease-in-out infinite; }
+  @keyframes summoner-ember {
+    0%, 100% { opacity: 0.14; filter: brightness(1) saturate(1); }
+    50% { opacity: 0.26; filter: brightness(1.04) saturate(1.04); }
+  }
+  /* core and wings share one 5.6s cycle but run in opposite phase: the glow
+     breathes outward from the center into the wings, then pulls back in. */
+  @keyframes summoner-core {
+    0%, 100% { opacity: 0.55; filter: brightness(1.1) saturate(1.08); }
+    50% { opacity: 0.14; filter: brightness(0.92) saturate(1); }
+  }
+  @keyframes summoner-wings {
+    0%, 100% { opacity: 0.1; filter: brightness(0.95) saturate(1); }
+    50% { opacity: 0.5; filter: brightness(1.12) saturate(1.1); }
+  }
+</style>
+</head>
+<body>
+
+<div style="position: relative; width: 100%; min-height: 100vh; background: radial-gradient(ellipse at 50% 8%, #2a1f34 0%, #18131f 34%, #0e0b12 68%); color: #efe8d8; font-family: 'Cormorant Garamond', serif; overflow-x: hidden;">
+
+  <svg style="position: fixed; inset: 0; width: 100%; height: 100%; opacity: 0.05; mix-blend-mode: overlay; pointer-events: none; z-index: 50;">
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"></feTurbulence></filter>
+    <rect width="100%" height="100%" filter="url(#grain)"></rect>
+  </svg>
+
+  <!-- nav -->
+  <div class="d9d-nav" style="height: 84px; display: flex; align-items: center; justify-content: space-between; padding: 0 56px; box-sizing: border-box; border-bottom: 1px solid rgba(203,185,138,0.16); position: relative; z-index: 10;">
+    <a href="index.html" style="font-family: 'Cinzel', serif; font-weight: 700; font-size: 20px; letter-spacing: 0.22em; color: #ecdcb0; text-decoration: none;">DESCEND9DOWN</a>
+    <div style="display: flex; gap: 32px; font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600;">
+      <a href="#">CANTOS</a>
+      <a href="omnia.html">OMNIA</a>
+      <a href="prints.html">ARCHETYPES</a>
+      <a href="archive.html">ARCHIVE</a>
+      <a href="#">D9S</a>
+    </div>
+  </div>
+
+  <div style="position: relative; z-index: 10; text-align: center; margin-top: 22px;">
+    <div style="font-family: 'Cinzel', serif; font-size: 22px; letter-spacing: 0.32em; color: #ecdcb0;">KALOS EIDOS</div>
+    <div style="font-style: italic; font-size: 17px; color: rgba(239,232,216,0.72); margin-top: 8px;">An Interactive Descent</div>
+  </div>
+
+  <!-- the clean cathedral background, with the live kaleidoscope spinning in the center gold window -->
+  <div style="position: relative; width: min(90%, 760px); margin: 18px auto 0 auto; z-index: 5;">
+    <img src="assets/62691ee2a62663b55e1163d6b56038b0.jpg" style="position: relative; z-index: 3; width: 100%; height: auto; display: block; filter: drop-shadow(0 0 60px rgba(124,58,237,0.25));">
+    <img class="summoner-glow summoner-glow-ember" src="assets/c63ae85801cf4235ac731446ef992044.png">
+    <img class="summoner-glow summoner-glow-core" src="assets/b43fd9aa456c4e60c9617c25b71ed9e6.png">
+    <img class="summoner-glow summoner-glow-wings" src="assets/dfc7156e0d2d609450e62cf685b1a0a6.png">
+    <div style="position: absolute; z-index: 4; left: 50%; top: 11%; width: 23%; aspect-ratio: 1 / 1; transform: translate(-50%, -50%); border-radius: 50%; overflow: hidden;
+      -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 100%); mask-image: radial-gradient(circle, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 100%);
+      box-shadow: 0 0 36px 14px rgba(236,197,122,0.22); pointer-events: none;">
+      <video autoplay loop muted playsinline preload="auto"
+        style="width: 100%; height: 100%; object-fit: cover; filter: saturate(1.1) brightness(1.22) contrast(1.05);">
+        <source src="assets/0474d0a7b85393c18087e2dba87721a9.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- CANTO I: live link to the 9-piece gallery (PLEROMA). CANTO II has nowhere to go
+         yet, so it stays a plain hover-only hotspot until its own set of images exists. -->
+    <a class="cantos-trigger cantos-trigger-left" href="index.html" style="left: 2%; top: 13%; width: 42%; height: 25%;"></a>
+    <div class="cantos-trigger cantos-trigger-right" style="right: 2%; top: 13%; width: 42%; height: 25%;"></div>
+    <div class="cantos-hint-glow cantos-hint-left" style="left: 23.2%; top: 23.8%;"></div>
+    <div class="cantos-hint-glow cantos-hint-right" style="left: 76.8%; top: 24%;"></div>
+    <img class="cantos-hint-img cantos-hint-img-left" src="assets/c3ef9a6a1a6d4f89d4a0267abc531da9.png">
+    <img class="cantos-hint-img cantos-hint-img-right" src="assets/59f578b4d03726594ac11629fb18cff4.png">
+    <img class="cantos-overlay cantos-overlay-left" src="assets/c3ef9a6a1a6d4f89d4a0267abc531da9.png">
+    <img class="cantos-overlay cantos-overlay-right" src="assets/59f578b4d03726594ac11629fb18cff4.png">
+    <div class="cantos-label cantos-label-left" style="left: 23.2%; top: 23.8%;">CANTO I</div>
+    <div class="cantos-label cantos-label-right" style="left: 76.8%; top: 24%;">CANTO II</div>
+  </div>
+
+  <div style="position: relative; z-index: 10; text-align: center; padding: 48px 0 60px 0; font-family: 'VT323', monospace; font-size: 15px; letter-spacing: 0.22em; color: rgba(203,185,138,0.4);">DESCEND9DOWN · EST. 2017 · THE SUM OF ALL</div>
+</div>
+</body>
+</html>
