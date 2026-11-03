@@ -122,20 +122,20 @@
     font-weight: 900;
     line-height: 0.9;
     letter-spacing: -0.01em;
-    background: linear-gradient(135deg, #c8922a 0%, #e8c870 35%, #c8922a 50%, #8a5e18 65%, #e8c870 80%, #c8922a 100%);
-    background-size: 300% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shimmer 6s ease-in-out infinite;
+    color: var(--accent);
+    text-shadow:
+      0 0 20px var(--accent-glow),
+      0 0 60px rgba(200,146,42,0.2);
+    animation: title-glow-gold 5s ease-in-out infinite;
     position: relative;
   }
 
-  @keyframes shimmer {
-    0%   { background-position: 200% center; }
-    40%  { background-position: 0% center; }
-    60%  { background-position: 0% center; }
-    100% { background-position: 200% center; }
+  /* the same pulsing glow used across every page's own name now, in
+     this page's own gold rather than each page re-inventing its own
+     lighting treatment. */
+  @keyframes title-glow-gold {
+    0%, 100% { text-shadow: 0 0 20px var(--accent-glow), 0 0 60px rgba(200,146,42,0.18); }
+    50%       { text-shadow: 0 0 40px rgba(200,146,42,0.9), 0 0 90px rgba(200,146,42,0.35); }
   }
 
   .hero-sub {
@@ -333,8 +333,7 @@
 
 <section class="hero">
   <div class="hero-eyebrow">Early Works · 2019 — 2023</div>
-  <h1 class="hero-title">DESCEND<br>9DOWN</h1>
-  <p class="hero-sub">ARCHIVE</p>
+  <h1 class="hero-title">ARCHIVE</h1>
   <div class="hero-divider"></div>
 </section>
 
