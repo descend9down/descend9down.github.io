@@ -39,7 +39,9 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px;display
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 48px 80px;position:relative;}
 .hero::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(123,47,255,0.08) 0%,transparent 70%);pointer-events:none;}
 .hero-eyebrow{font-size:14px;letter-spacing:6px;text-transform:uppercase;margin-bottom:36px;animation:fadeUp 1.2s ease both;}
-.hero-title{font-family:'Cinzel',serif;font-size:clamp(52px,8vw,110px);font-weight:900;letter-spacing:0.08em;line-height:0.9;text-align:center;color:transparent;background:linear-gradient(135deg,#e8d5ff 0%,#c084fc 40%,#7b2fff 70%,#4a0090 100%);-webkit-background-clip:text;background-clip:text;animation:fadeUp 1.2s 0.1s ease both;margin-bottom:24px;}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(52px,8vw,110px);font-weight:900;letter-spacing:0.08em;line-height:0.9;text-align:center;color:transparent;background:linear-gradient(135deg,#e8d5ff 0%,#c084fc 40%,#7b2fff 70%,#4a0090 100%);-webkit-background-clip:text;background-clip:text;animation:fadeUp 1.2s 0.1s ease both,title-glow-violet 5s ease-in-out infinite;margin-bottom:24px;}
+/* same pulsing glow as ARCHETYPES/ARCHIVE/KALOS EIDOS, in this page's own violet */
+@keyframes title-glow-violet{0%,100%{text-shadow:0 0 20px rgba(192,132,252,0.45),0 0 60px rgba(123,47,255,0.18);}50%{text-shadow:0 0 40px rgba(192,132,252,0.9),0 0 90px rgba(123,47,255,0.35);}}
 .hero-sub{font-size:11px;letter-spacing:5px;text-transform:uppercase;animation:fadeUp 1.2s 0.2s ease both;margin-bottom:72px;}
 .gallery{width:100%;max-width:1200px;animation:fadeUp 1.2s 0.4s ease both;}
 .gallery-label{font-size:9px;letter-spacing:5px;text-transform:uppercase;margin-bottom:24px;border-left:2px solid rgba(123,47,255,0.3);padding-left:12px;}
