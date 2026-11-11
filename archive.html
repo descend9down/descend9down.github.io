@@ -9,32 +9,58 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=VT323&display=swap" rel="stylesheet">
 <style>
   :root {
-    --accent: #c8922a;
+    --paper: #ead9b8;
+    --paper-light: #f4ead0;
+    --paper-mid: #d7c196;
+    --paper-dark: #b59c6b;
+    --ink: #2b1d12;
+    --ink-dim: rgba(43,29,18,0.58);
+    --ink-faint: rgba(43,29,18,0.4);
+    --accent: #a9752a;
     --accent-dim: #7a5510;
-    --accent-glow: rgba(200,146,42,0.35);
-    --bg: #050403;
-    --surface: #0e0a05;
-    --text: #e8d5b0;
-    --text-dim: #7a6a50;
-    --noise-opacity: 0.04;
+    --accent-glow: rgba(169,117,42,0.35);
+    --border: rgba(107,78,40,0.28);
+    --border-strong: rgba(107,78,40,0.55);
+    --noise-opacity: 0.45;
   }
 
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
   body {
-    background: var(--bg);
-    color: var(--text);
+    background: var(--paper);
+    color: var(--ink);
     font-family: 'Cinzel', serif;
     min-height: 100vh;
     overflow-x: hidden;
   }
 
-  /* noise overlay */
+  /* paper grain */
   body::before {
     content:''; position:fixed; inset:0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
     opacity: var(--noise-opacity);
-    pointer-events: none; z-index:9999;
+    mix-blend-mode: multiply;
+    pointer-events: none; z-index:9996;
+  }
+
+  /* foxing stains — a few soft rust-colored blotches, like age spots on old paper */
+  body::after {
+    content:''; position:fixed; inset:0;
+    background-image:
+      radial-gradient(ellipse 180px 140px at 12% 22%, rgba(139,90,43,0.16), transparent 70%),
+      radial-gradient(ellipse 140px 110px at 82% 15%, rgba(139,90,43,0.12), transparent 70%),
+      radial-gradient(ellipse 220px 160px at 90% 70%, rgba(139,90,43,0.14), transparent 70%),
+      radial-gradient(ellipse 160px 120px at 18% 85%, rgba(139,90,43,0.13), transparent 70%),
+      radial-gradient(ellipse 130px 100px at 55% 45%, rgba(139,90,43,0.07), transparent 70%);
+    mix-blend-mode: multiply;
+    pointer-events: none; z-index:9997;
+  }
+
+  /* soft vignette at the page edges, like a scanned document or an old photograph */
+  .vignette {
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse 90% 70% at 50% 40%, transparent 55%, rgba(43,29,18,0.22) 100%);
+    pointer-events: none; z-index: 9998;
   }
 
   /* ── NAV ── */
@@ -42,7 +68,9 @@
     position: fixed; top:0; left:0; right:0; z-index:100;
     display: flex; justify-content: space-between; align-items: center;
     padding: 18px 32px;
-    background: linear-gradient(to bottom, rgba(5,4,3,0.95), transparent);
+    background: rgba(234, 217, 184, 0.92);
+    border-bottom: 1px solid var(--border-strong);
+    backdrop-filter: blur(14px);
   }
 
   .nav-brand {
@@ -50,7 +78,7 @@
     font-size: 1.05rem;
     font-weight: 900;
     letter-spacing: 0.15em;
-    color: var(--accent);
+    color: var(--ink);
     text-decoration: none;
   }
 
@@ -68,37 +96,33 @@
     border: 1px solid transparent;
     border-radius: 2px;
     transition: all 0.25s ease;
-    color: var(--text-dim);
+    color: var(--paper-dark);
   }
 
   /* each page's own accent on hover / active */
   .nav-links a[data-page="gallery"]:hover,
   .nav-links a[data-page="gallery"].active {
-    color: #dcc6ff;
-    border-color: rgba(155,127,212,0.45);
-    background: rgba(155,127,212,0.08);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.9), 0 0 5px rgba(0,0,0,0.7), 0 0 10px rgba(155,127,212,0.6);
+    color: #7b4fd4;
+    border-color: rgba(123,79,212,0.4);
+    background: rgba(123,79,212,0.08);
   }
   .nav-links a[data-page="prints"]:hover,
   .nav-links a[data-page="prints"].active {
-    color: #c0392b;
-    border-color: rgba(192,57,43,0.45);
-    background: rgba(192,57,43,0.08);
-    text-shadow: 0 0 8px rgba(192,57,43,0.6);
+    color: #b0392b;
+    border-color: rgba(176,57,43,0.4);
+    background: rgba(176,57,43,0.08);
   }
   .nav-links a[data-page="archive"]:hover,
   .nav-links a[data-page="archive"].active {
     color: var(--accent);
-    border-color: rgba(200,146,42,0.45);
-    background: rgba(200,146,42,0.08);
-    text-shadow: 0 0 8px var(--accent-glow);
+    border-color: rgba(169,117,42,0.45);
+    background: rgba(169,117,42,0.1);
   }
   .nav-links a[data-page="d9s"]:hover,
   .nav-links a[data-page="d9s"].active {
-    color: #00d4c8;
-    border-color: rgba(0,212,200,0.45);
-    background: rgba(0,212,200,0.08);
-    text-shadow: 0 0 8px rgba(0,212,200,0.6);
+    color: #0c8f86;
+    border-color: rgba(12,143,134,0.4);
+    background: rgba(12,143,134,0.08);
   }
 
   /* ── HERO ── */
@@ -106,6 +130,7 @@
     padding: 140px 40px 60px;
     text-align: center;
     position: relative;
+    border-bottom: 1px solid var(--border);
   }
 
   .hero-eyebrow {
@@ -117,32 +142,24 @@
     text-transform: uppercase;
   }
 
+  /* reads like a stamped ledger heading rather than a neon sign — a
+     pulsing glow doesn't sit right on paper, so this is a flat brass ink
+     color with a soft sunken shadow instead, as if pressed into the page */
   .hero-title {
     font-size: clamp(52px, 10vw, 120px);
     font-weight: 900;
     line-height: 0.9;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.01em;
     color: var(--accent);
-    text-shadow:
-      0 0 20px var(--accent-glow),
-      0 0 60px rgba(200,146,42,0.2);
-    animation: title-glow-gold 5s ease-in-out infinite;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.35), 0 3px 10px rgba(43,29,18,0.25);
     position: relative;
-  }
-
-  /* the same pulsing glow used across every page's own name now, in
-     this page's own gold rather than each page re-inventing its own
-     lighting treatment. */
-  @keyframes title-glow-gold {
-    0%, 100% { text-shadow: 0 0 20px var(--accent-glow), 0 0 60px rgba(200,146,42,0.18); }
-    50%       { text-shadow: 0 0 40px rgba(200,146,42,0.9), 0 0 90px rgba(200,146,42,0.35); }
   }
 
   .hero-sub {
     font-family: 'Cinzel', serif;
     font-size: 13px;
     letter-spacing: 0.5em;
-    color: var(--text-dim);
+    color: var(--ink-dim);
     margin-top: 16px;
   }
 
@@ -174,86 +191,64 @@
     background: linear-gradient(to right, var(--accent-dim), transparent);
   }
 
-  /* ── GRID ── */
+  /* ── GRID — mounted photo prints, not hover-reveal tiles ── */
   .archive-grid {
-    padding: 0 32px 80px;
+    position: relative; z-index: 1;
+    padding: 10px 32px 80px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2px;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 34px 28px;
   }
 
   .archive-item {
-    position: relative;
-    overflow: hidden;
+    background: var(--paper-light);
+    padding: 10px 10px 6px;
+    box-shadow: 0 10px 22px -10px rgba(43,29,18,0.35), 0 1px 0 rgba(255,255,255,0.5) inset;
     cursor: pointer;
-    background: #000;
-    aspect-ratio: 3/4;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .archive-item:hover {
+    transform: scale(1.035);
+    box-shadow: 0 18px 32px -12px rgba(43,29,18,0.45), 0 1px 0 rgba(255,255,255,0.5) inset;
+    z-index: 2;
   }
 
   .archive-item img {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 3/4;
     object-fit: cover;
     display: block;
-    transition: transform 0.6s ease, filter 0.6s ease;
-    filter: brightness(0.85) saturate(0.9);
+    filter: sepia(0.22) saturate(0.92) contrast(1.03) brightness(0.98);
   }
 
-  .archive-item:hover img {
-    transform: scale(1.04);
-    filter: brightness(1) saturate(1.1);
-  }
-
-  .archive-item-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(5,4,3,0.9) 0%, rgba(5,4,3,0.2) 40%, transparent 70%);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 24px 20px;
-    transition: opacity 0.4s ease;
-  }
-
-  .archive-item:hover .archive-item-overlay {
-    background: linear-gradient(to top, rgba(5,4,3,0.95) 0%, rgba(5,4,3,0.5) 50%, rgba(5,4,3,0.1) 80%);
+  .archive-item-caption {
+    text-align: center;
+    padding: 10px 4px 6px;
   }
 
   .archive-item-title {
     font-family: 'Cinzel', serif;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.2em;
-    color: var(--text);
+    letter-spacing: 0.16em;
+    color: var(--ink);
     text-transform: uppercase;
-    margin-bottom: 4px;
   }
 
   .archive-item-meta {
     font-family: 'VT323', monospace;
-    font-size: 13px;
-    letter-spacing: 0.15em;
+    font-size: 12.5px;
+    letter-spacing: 0.2em;
     color: var(--accent);
+    margin-top: 3px;
   }
 
-  /* amber corner accent on hover */
-  .archive-item::after {
-    content:'';
-    position:absolute;
-    top:0; left:0; right:0; bottom:0;
-    border: 1px solid transparent;
-    transition: border-color 0.4s ease;
-    pointer-events:none;
-  }
-  .archive-item:hover::after {
-    border-color: rgba(200,146,42,0.3);
-  }
-
-  /* ── LIGHTBOX ── */
+  /* ── LIGHTBOX — a dim viewing room rather than a flat black modal ── */
   .lightbox {
     display:none;
     position:fixed; inset:0; z-index:500;
-    background: rgba(3,2,1,0.97);
+    background: rgba(24, 16, 9, 0.96);
     align-items:center; justify-content:center;
     flex-direction:column;
   }
@@ -263,7 +258,8 @@
     max-width: 90vw;
     max-height: 85vh;
     object-fit: contain;
-    border: 1px solid rgba(200,146,42,0.2);
+    border: 6px solid var(--paper-light);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   }
 
   .lightbox-caption {
@@ -278,7 +274,7 @@
   .lightbox-close {
     position:absolute; top:24px; right:32px;
     font-family:'VT323',monospace; font-size:28px;
-    color:var(--text-dim); cursor:pointer;
+    color:var(--paper-mid); cursor:pointer;
     background:none; border:none;
     transition: color 0.2s;
   }
@@ -286,25 +282,25 @@
 
   /* ── FOOTER ── */
   footer {
-    border-top: 1px solid rgba(200,146,42,0.15);
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border);
     padding: 24px 40px;
     display:flex; justify-content:center; align-items:center; gap:12px;
     font-family:'VT323',monospace; font-size:13px;
-    letter-spacing:0.2em; color:var(--text-dim);
+    letter-spacing:0.2em; color:var(--ink-dim);
   }
   footer .sep { color:var(--accent-dim); }
 .footer-logo {
   height: 40px;
   width: auto;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
-/* LIGHTBOX */
   @media (max-width:600px) {
     nav { padding:14px 18px; }
     .nav-links a { font-size:9px; padding:4px 8px; }
     .hero { padding:100px 20px 40px; }
-    .archive-grid { padding:0 0 60px; gap:1px; }
+    .archive-grid { padding:10px 18px 60px; gap: 26px 18px; }
     .section-label { padding:0 16px; }
   }
 </style>
@@ -318,6 +314,8 @@
 </script>
 </head>
 <body>
+
+<div class="vignette"></div>
 
 <nav>
   <a href="index.html" class="nav-brand">DESCEND9DOWN</a>
@@ -348,11 +346,11 @@
 </div>
 
 <footer>
-  <span class="footer-text shimmer-slow">All works protected</span>
-  <span class="footer-text shimmer-slow">·</span>
-  <span class="footer-text shimmer-slow">©DESCEND9DOWN</span>
-<img class="footer-logo" src="d9d_trans_logo.png" alt="DESCEND9DOWN">  
-  <span class="footer-text shimmer-slow">2026</span>
+  <span>All works protected</span>
+  <span class="sep">·</span>
+  <span>©DESCEND9DOWN</span>
+<img class="footer-logo" src="d9d_trans_logo.png" alt="DESCEND9DOWN">
+  <span>2026</span>
 </footer>
 
 <script>
@@ -374,7 +372,7 @@ images.forEach((item, idx) => {
   el.className = 'archive-item';
   el.innerHTML = `
     <img src="${item.src}" alt="${item.title}" loading="lazy">
-    <div class="archive-item-overlay">
+    <div class="archive-item-caption">
       <div class="archive-item-title">${item.title}</div>
       <div class="archive-item-meta">Digital · ${item.year}</div>
     </div>`;
