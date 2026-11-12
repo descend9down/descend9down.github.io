@@ -92,16 +92,43 @@
       letter-spacing: 0.2em;
       text-decoration: none;
       color: var(--bone-dark);
-      transition: color 0.2s;
+      padding: 5px 12px;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      transition: all 0.25s ease;
       text-transform: uppercase;
     }
 
-    .nav-links a:hover { color: var(--ink); }
-    .nav-links a[data-page="omnia"] {
-      color: var(--ink);
-      font-weight: 700;
-      border-bottom: 1px solid var(--ink);
-      padding-bottom: 2px;
+    /* each page's own accent on hover / active */
+    .nav-links a[data-page="gallery"]:hover,
+    .nav-links a[data-page="gallery"].active {
+      color: #7b4fd4;
+      border-color: rgba(123,79,212,0.4);
+      background: rgba(123,79,212,0.08);
+    }
+    .nav-links a[data-page="omnia"]:hover,
+    .nav-links a[data-page="omnia"].active {
+      color: #cbb98a;
+      border-color: rgba(203,185,138,0.4);
+      background: rgba(203,185,138,0.08);
+    }
+    .nav-links a[data-page="archetypes"]:hover,
+    .nav-links a[data-page="archetypes"].active {
+      color: #e8e4da;
+      border-color: rgba(232,228,218,0.4);
+      background: rgba(232,228,218,0.08);
+    }
+    .nav-links a[data-page="archive"]:hover,
+    .nav-links a[data-page="archive"].active {
+      color: #c8922a;
+      border-color: rgba(200,146,42,0.45);
+      background: rgba(200,146,42,0.1);
+    }
+    .nav-links a[data-page="d9s"]:hover,
+    .nav-links a[data-page="d9s"].active {
+      color: #0c8f86;
+      border-color: rgba(12,143,134,0.4);
+      background: rgba(12,143,134,0.08);
     }
 
     /* MAIN */
@@ -406,7 +433,7 @@
     <a href="index.html" class="nav-brand">DESCEND9DOWN</a>
     <ul class="nav-links">
       <li><a href="index.html"   data-page="gallery">PLEROMA</a></li>
-      <li><a href="omnia.html"   data-page="omnia">OMNIA</a></li>
+      <li><a href="omnia.html"   data-page="omnia" class="active">OMNIA</a></li>
       <li><a href="prints.html"  data-page="archetypes">ARCHETYPES</a></li>
       <li><a href="archive.html" data-page="archive">ARCHIVE</a></li>
       <li><a href="https://descend9down.github.io/descend9sound" data-page="d9s">D9S</a></li>
