@@ -424,8 +424,15 @@
       .works-grid { grid-template-columns: 1fr; }
       .work-item { aspect-ratio: 4/3 !important; grid-column: span 1 !important; }
       .works-section { padding: 1rem; }
-      .hero { padding: 3rem 1.5rem 2rem; }
-      .nav-links { gap: 1rem; }
+      .hero { padding: 1.5rem 1.5rem 2rem; }
+      /* a 5-item letter-spaced nav plus the full wordmark cannot fit one
+         line on a phone without shrinking to unreadable text - so on
+         narrow screens the nav drops out of fixed position and wraps
+         to as many rows as it needs instead. */
+      nav { position: static; height: auto; flex-wrap: wrap; justify-content: center; gap: 8px 0; padding: 14px 16px; }
+      .nav-brand { width: 100%; text-align: center; }
+      main { padding-top: 0; }
+      .nav-links { flex-wrap: wrap; justify-content: center; gap: 6px 10px; }
       .nav-links a { font-size: 0.58rem; }
     }
   </style>
