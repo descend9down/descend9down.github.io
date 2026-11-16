@@ -58,7 +58,8 @@ class KaleidoscopeFX {
     this.img = img;
     this.glowColor = (opts.glowColor || [160, 60, 255]).map(c => c / 255);
 
-    this.gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const glOpts = { preserveDrawingBuffer: true };
+    this.gl = canvas.getContext('webgl', glOpts) || canvas.getContext('experimental-webgl', glOpts);
     this.slices = opts.slices || 9;
     this.seed = 0;
     this.panSeedX = 0;
