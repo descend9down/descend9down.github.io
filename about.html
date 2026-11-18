@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABOUT | DESCEND9DOWN</title>
+<meta name="description" content="ABOUT — the practice and philosophy behind DESCEND9DOWN, a dark surreal digital art project built around transformation and interactive kaleidoscope pieces.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-32.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DESCEND9DOWN">
+<meta property="og:title" content="ABOUT | DESCEND9DOWN">
+<meta property="og:description" content="ABOUT — the practice and philosophy behind DESCEND9DOWN, a dark surreal digital art project built around transformation and interactive kaleidoscope pieces.">
+<meta property="og:url" content="https://descend9down.github.io/about.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ABOUT | DESCEND9DOWN">
+<meta name="twitter:description" content="ABOUT — the practice and philosophy behind DESCEND9DOWN, a dark surreal digital art project built around transformation and interactive kaleidoscope pieces.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {--black:#000;--void:#0a0a12;--purple:#7b2fff;--light-purple:#c084fc;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:var(--black);color:var(--light-purple);font-family:'Rajdhani',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:0.35;}
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(123,47,255,0.12);background:linear-gradient(to bottom,rgba(0,0,0,0.9),transparent);}
+.site-title{font-family:'Cinzel',serif;font-size:13px;font-weight:900;letter-spacing:8px;color:rgba(192,130,252,0.9);text-decoration:none;}
+.nav-links{display:flex;flex-direction:row;gap:2rem;list-style:none;}
+.nav-links a{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.2em;text-decoration:none;color:rgba(255,255,255,0.4);padding:5px 12px;border:1px solid transparent;border-radius:2px;transition:all 0.25s ease;text-transform:uppercase;}
+.nav-links a[data-page="gallery"]:hover,.nav-links a[data-page="gallery"].active{color:#7b4fd4;border-color:rgba(123,79,212,0.4);background:rgba(123,79,212,0.08);}
+.nav-links a[data-page="omnia"]:hover,.nav-links a[data-page="omnia"].active{color:#cbb98a;border-color:rgba(203,185,138,0.4);background:rgba(203,185,138,0.08);}
+.nav-links a[data-page="archetypes"]:hover,.nav-links a[data-page="archetypes"].active{color:#e8e4da;border-color:rgba(232,228,218,0.4);background:rgba(232,228,218,0.08);}
+.nav-links a[data-page="archive"]:hover,.nav-links a[data-page="archive"].active{color:#c8922a;border-color:rgba(200,146,42,0.45);background:rgba(200,146,42,0.1);}
+.nav-links a[data-page="d9s"]:hover,.nav-links a[data-page="d9s"].active{color:#0c8f86;border-color:rgba(12,143,134,0.4);background:rgba(12,143,134,0.08);}
+.nav-links a[data-page="about"]:hover,.nav-links a[data-page="about"].active{color:#c084fc;border-color:rgba(192,130,252,0.45);background:rgba(192,130,252,0.1);}
+.header-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(123,47,255,0.3),transparent);margin:0 32px;}
+
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:150px 48px 40px;position:relative;text-align:center;}
+.hero::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(123,47,255,0.08) 0%,transparent 70%);pointer-events:none;}
+.hero-eyebrow{font-size:14px;letter-spacing:6px;text-transform:uppercase;margin-bottom:28px;animation:fadeUp 1.2s ease both;}
+.hero-title{font-family:'Cinzel',serif;font-size:clamp(44px,7vw,84px);font-weight:900;letter-spacing:0.08em;line-height:0.95;color:transparent;background:linear-gradient(135deg,#e8d5ff 0%,#c084fc 40%,#7b2fff 70%,#4a0090 100%);-webkit-background-clip:text;background-clip:text;animation:fadeUp 1.2s 0.1s ease both,title-glow-violet 5s ease-in-out infinite;margin-bottom:20px;}
+@keyframes title-glow-violet{0%,100%{text-shadow:0 0 20px rgba(192,132,252,0.45),0 0 60px rgba(123,47,255,0.18);}50%{text-shadow:0 0 40px rgba(192,132,252,0.9),0 0 90px rgba(123,47,255,0.35);}}
+.hero-sub{font-size:12px;letter-spacing:4px;text-transform:uppercase;max-width:640px;animation:fadeUp 1.2s 0.2s ease both;color:rgba(192,130,252,0.7);}
+
+.content{max-width:720px;margin:0 auto;padding:0 32px 120px;animation:fadeUp 1.2s 0.4s ease both;}
+.content p{font-size:17px;line-height:1.8;color:rgba(232,221,255,0.82);margin-bottom:28px;font-weight:400;}
+.section-label{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:rgba(192,130,252,0.55);border-left:2px solid rgba(123,47,255,0.4);padding-left:14px;margin:56px 0 24px;}
+.content p:first-of-type{font-size:19px;color:rgba(255,255,255,0.92);}
+.edit-flag{color:#e8a0a0;font-style:italic;}
+
+footer{padding:48px;border-top:1px solid rgba(123,47,255,0.1);display:flex;justify-content:center;align-items:center;gap:16px;margin-top:40px;flex-wrap:wrap;}
+.footer-text{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(192,130,252,0.45);}
+.footer-logo{height:36px;width:auto;opacity:0.5;filter:brightness(1.5) saturate(0.5);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:#000;}::-webkit-scrollbar-thumb{background:rgba(123,47,255,0.4);}
+
+@media (max-width: 900px) { header{padding:16px 24px;} .nav-links{gap:1rem;} }
+@media (max-width: 600px) {
+  header{position:static;flex-wrap:wrap;justify-content:center;gap:8px 0;padding:14px 16px;}
+  .site-title{width:100%;text-align:center;font-size:11px;letter-spacing:5px;}
+  .header-line{display:none;}
+  .nav-links{flex-wrap:wrap;justify-content:center;gap:6px 10px;}
+  .nav-links a{font-size:0.58rem;padding:4px 8px;}
+  .hero{padding:120px 20px 40px;}
+  .content{padding:0 20px 80px;}
+}
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQZ9CLCNX1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-RQZ9CLCNX1');
+</script>
+<script data-goatcounter="https://d9d.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<header>
+  <a href="index.html" class="site-title">DESCEND9DOWN</a>
+  <div class="header-line"></div>
+  <ul class="nav-links">
+  <li><a href="index.html" data-page="gallery">PLEROMA</a></li>
+  <li><a href="omnia.html" data-page="omnia">OMNIA</a></li>
+  <li><a href="prints.html" data-page="archetypes">ARCHETYPES</a></li>
+  <li><a href="archive.html" data-page="archive">ARCHIVE</a></li>
+  <li><a href="about.html" data-page="about" class="active">ABOUT</a></li>
+  <li><a href="https://descend9down.github.io/descend9sound" data-page="d9s">D9S</a></li>
+</ul>
+</header>
+
+<div class="hero">
+  <p class="hero-eyebrow">An Introduction</p>
+  <h1 class="hero-title">DESCEND9DOWN</h1>
+  <p class="hero-sub">Dark surreal digital art &nbsp;·&nbsp; interactive kaleidoscope pieces &nbsp;·&nbsp; a practice without a fixed form</p>
+</div>
+
+<div class="content">
+  <p>A work of art is the sum of all its creation. There is no final form — only what comes next. That's not a tagline here; it's close to the operating principle. Every piece in this collection is allowed to become something other than what it started as, and the collection itself isn't trying to converge on one consistent "look." It's a practice of letting each piece influence itself as it's made, rather than forcing it to match the one before it.</p>
+
+  <div class="section-label">The Practice</div>
+  <p>DESCEND9DOWN moves between traditional and digital media — hand-drawn and painted work alongside pieces built and finished entirely on screen. What ties the body of work together isn't a single style; it's a recurring pull toward the dark, the surreal, and the symmetrical — toward forms that feel like they were uncovered rather than designed.</p>
+  <p>That same instinct is what led to Kalos Eidos — <span class="edit-flag">[EDIT: a line or two on how/why you started building the interactive kaleidoscope pieces, in your own words]</span>. Each interactive piece lets a finished artwork fold into a live, generative kaleidoscope — a second, unrepeatable form hidden inside the first one, waiting for someone to go looking for it.</p>
+
+  <div class="section-label">Who's Behind It</div>
+  <p><span class="edit-flag">[EDIT: this paragraph is a placeholder — name, background, how long you've been making work, where you're based if you want that public, anything about your path into this practice. Nothing here should be invented; write it yourself or tell me what to say and I'll draft it from that.]</span></p>
+
+  <div class="section-label">Explore the Work</div>
+  <p>The gallery, the Omnia collection, the Archetypes series, and the Archive of early work are all here to be explored — most of it interactive, built to be unfolded rather than just looked at. Kalos Eidos awaits.</p>
+</div>
+
+<footer>
+  <img class="footer-logo" src="d9d_trans_logo.png" alt="DESCEND9DOWN" />
+  <span class="footer-text">© DESCEND9DOWN</span>
+</footer>
+</body>
+</html>
