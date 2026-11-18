@@ -104,6 +104,8 @@
   gtag('js', new Date());
   gtag('config', 'G-RQZ9CLCNX1');
 </script>
+<script data-goatcounter="https://d9d.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 <div id="stage">
@@ -163,6 +165,9 @@ function toggleKaleidoscope() {
     img.style.opacity = '0';
     kCanvas.style.opacity = '1';
     modeLabel.textContent = `KALOS EIDOS ✦ ${kSlices} AXES`;
+    if (window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({ path: 'kalos-eidos-played/old_gods_and_new', title: 'Kalos Eidos played: OCULUS', event: true });
+    }
     captureBtn.style.display = 'inline-block';
   } else {
     kCanvas.style.opacity = '0';
