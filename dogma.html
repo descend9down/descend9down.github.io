@@ -95,6 +95,8 @@
   gtag('js', new Date());
   gtag('config', 'G-RQZ9CLCNX1');
 </script>
+<script data-goatcounter="https://d9d.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 <div id="stage">
@@ -152,6 +154,9 @@ function toggleKaleidoscope() {
     img.style.opacity = '0';
     kCanvas.style.opacity = '1';
     modeLabel.textContent = `KALOS EIDOS ✦ ${kSlices} AXES`;
+    if (window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({ path: 'kalos-eidos-played/dogma', title: 'Kalos Eidos played: THE DEEP', event: true });
+    }
   } else {
     kCanvas.style.opacity = '0';
     img.style.opacity = '1';
